@@ -53,6 +53,50 @@ const runbook = [
           "git clean -nfd",
           "git clean -fd"
         ]
+      },
+      {
+        title: "Cherry pick commit",
+        description: "Cherry pick commit on any target branch",
+        steps: [
+          "git checkout target/branch",
+          "git cherry-pick commit-hash",
+          "after resolving comments",
+          "git add .",
+          "git cherry-pick --continue",
+          "keep the same commit message using :wq"
+        ]
+      },
+      {
+        title: "Tag creation",
+        description: "Create a tag and push to remote / origin, we switch a branch but checkout a tag",
+        steps: [
+          "git switch branch/from-which-tag-should-be-created",
+          "git tag v3.3.5-beta-lms.2",
+          "git push origin v3.3.5-beta-lms.2",
+          "git checkout v3.3.5-beta-lms.2"
+        ]
+      },
+      {
+        title: "To check which branch the tag is made",
+        description: "check which all possible branches the particular tag is made",
+        steps: [
+          "git fetch --all --tags",
+          "git branch -r --contains v4.1.3-alpha-lms.3"
+        ]
+      },
+      {
+        title: "To reset local branch with remote",
+        description: "this will hard reset all the commits to match the origin/branch",
+        steps: [
+          "git reset --hard origin/branch-name-in-local"
+        ]
+      },
+      {
+        title: "Restore staged changes",
+        description: "restore all the staged changes files to unstage",
+        steps: [
+          "git restore ."
+        ]
       }
     ]
   },
@@ -83,6 +127,26 @@ const runbook = [
     title: "Docker",
     summary: "Local container workflows",
     tasks: [
+      {
+        title: "Docker containers up and down command",
+        description: "docker containers mentioned in docker-compose.yaml file",
+        steps: [
+          "cd dir/to/docker-compose",
+          "docker compose up -d",
+          "docker compose down"
+        ]
+      },
+      {
+        title: "Docker container maneuver",
+        description: "commands to exec particular container shell bash or view logs and even stop the container",
+        steps: [
+          "docker ps",
+          "docker exec -it 42b3122ce10a sh",
+          "docker exec -it 42b3122ce10a bash",
+          "docker logs -f 42b3122ce10a",
+          "docker stop 42b3122ce10a"
+        ]
+      },
       {
         title: "Build and run the app locally",
         description: "Iterate on the service with local ports and environment variables.",
