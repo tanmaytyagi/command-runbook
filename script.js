@@ -1,198 +1,212 @@
 // Data-first model: edit the structure below to add sections, tasks, or steps.
 const runbook = [
-  {
-    id: "git",
-    title: "Git",
-    summary: "Version control workflows",
-    tasks: [
-      {
-        title: "Create and push a new branch",
-        description: "Start a fresh work item from the latest main branch.",
-        steps: [
-          "git checkout main",
-          "git pull origin main",
-          "git checkout -b feature/short-description",
-          "git push -u origin feature/short-description"
+    {
+        id: "git",
+        title: "Git",
+        summary: "Version control workflows",
+        tasks: [
+            {
+                title: "Create and push a new branch",
+                description: "Start a fresh work item from the latest main branch.",
+                steps: [
+                    "git checkout main",
+                    "git pull origin main",
+                    "git checkout -b feature/short-description",
+                    "git push -u origin feature/short-description"
+                ]
+            },
+            {
+                title: "Amend changes to the last commit",
+                description: "Amend changes to the last commit without changing the commit message",
+                steps: [
+                    "git add .",
+                    "git commit --amend --no-edit",
+                    "git push --force-with-lease"
+                ]
+            },
+            {
+                title: "Merge and push a branch to main",
+                description: "Merge a branch to main and push the changes to the remote repository.",
+                steps: [
+                    "git switch main",
+                    "git pull origin main",
+                    "git merge bug_fix",
+                    "git add .",
+                    "git commit -m \"Merge branch bug_fix into main\"",
+                    "git push origin main"
+                ]
+            },
+            {
+                title: "Set global git config",
+                description: "Applies to every repo for your OS user, stored in ~/.gitconfig",
+                steps: [
+                    "git config --global user.name \"Tanmay Tyagi\"",
+                    "git config --global user.email \"tanmay.tyagi@gmail.com\"",
+                    "git config user.name",
+                    "git config user.email"
+                ]
+            },
+            {
+                title: "To remove all untracked files and directories",
+                description: "first inspect and then delete",
+                steps: [
+                    "git clean -nfd",
+                    "git clean -fd"
+                ]
+            },
+            {
+                title: "Cherry pick commit",
+                description: "Cherry pick commit on any target branch",
+                steps: [
+                    "git checkout target/branch",
+                    "git cherry-pick commit-hash",
+                    "after resolving comments",
+                    "git add .",
+                    "git cherry-pick --continue",
+                    "keep the same commit message using :wq"
+                ]
+            },
+            {
+                title: "Tag creation",
+                description: "Create a tag and push to remote / origin, we switch a branch but checkout a tag",
+                steps: [
+                    "git switch branch/from-which-tag-should-be-created",
+                    "git tag v3.3.5-beta-lms.2",
+                    "git push origin v3.3.5-beta-lms.2",
+                    "git checkout v3.3.5-beta-lms.2"
+                ]
+            },
+            {
+                title: "To check which branch the tag is made",
+                description: "check which all possible branches the particular tag is made",
+                steps: [
+                    "git fetch --all --tags",
+                    "git branch -r --contains v4.1.3-alpha-lms.3"
+                ]
+            },
+            {
+                title: "To reset local branch with remote",
+                description: "this will hard reset all the commits to match the origin/branch",
+                steps: [
+                    "git reset --hard origin/branch-name-in-local"
+                ]
+            },
+            {
+                title: "Restore staged changes",
+                description: "restore all the staged changes files to unstage",
+                steps: [
+                    "git restore ."
+                ]
+            }
         ]
-      },
-      {
-        title: "Amend changes to the last commit",
-        description: "Amend changes to the last commit without changing the commit message",
-        steps: [
-          "git add .",
-          "git commit --amend --no-edit",
-          "git push --force-with-lease"
+    },
+    {
+        id: "sql",
+        title: "SQL",
+        summary: "Database checks and migrations",
+        tasks: [
+            {
+                title: "Verify connectivity with a health query",
+                description: "Confirm credentials and latency without modifying data.",
+                steps: [
+                    'export PGPASSWORD="$DB_PASSWORD"',
+                    'psql "host=$DB_HOST user=$DB_USER dbname=$DB_NAME sslmode=require" -c "SELECT now() AS server_time, current_user, version();"'
+                ]
+            },
+            {
+                title: "Export recent orders to CSV",
+                description: "Capture a time-bounded dataset for analysis.",
+                steps: [
+                    'psql "host=$DB_HOST user=$DB_USER dbname=$DB_NAME sslmode=require" -c "\\copy (SELECT * FROM orders WHERE created_at >= now() - interval \'7 days\') TO ./orders.csv CSV HEADER"'
+                ]
+            }
         ]
-      },
-      {
-        title: "Merge and push a branch to main",
-        description: "Merge a branch to main and push the changes to the remote repository.",
-        steps: [
-          "git switch main",
-          "git pull origin main",
-          "git merge bug_fix",
-          "git add .",
-          "git commit -m \"Merge branch bug_fix into main\"",
-          "git push origin main"
+    },
+    {
+        id: "docker",
+        title: "Docker",
+        summary: "Local container workflows",
+        tasks: [
+            {
+                title: "Docker containers up and down command",
+                description: "docker containers mentioned in docker-compose.yaml file",
+                steps: [
+                    "cd dir/to/docker-compose",
+                    "docker compose up -d",
+                    "docker compose down"
+                ]
+            },
+            {
+                title: "Docker container maneuver",
+                description: "commands to exec particular container shell bash or view logs and even stop the container",
+                steps: [
+                    "docker ps",
+                    "docker exec -it 42b3122ce10a sh",
+                    "docker exec -it 42b3122ce10a bash",
+                    "docker logs -f 42b3122ce10a",
+                    "docker stop 42b3122ce10a"
+                ]
+            },
+            {
+                title: "Build and run the app locally",
+                description: "Iterate on the service with local ports and environment variables.",
+                steps: [
+                    "docker build -t app:dev .",
+                    "docker run --rm -p 3000:3000 --env-file .env app:dev"
+                ]
+            },
+            {
+                title: "Clean up stopped containers and dangling images",
+                description: "Reclaim disk space after local testing.",
+                steps: [
+                    "docker container prune -f",
+                    "docker image prune -f"
+                ]
+            }
         ]
-      },
-      {
-        title: "Set global git config",
-        description: "Applies to every repo for your OS user, stored in ~/.gitconfig",
-        steps: [
-          "git config --global user.name \"Tanmay Tyagi\"",
-          "git config --global user.email \"tanmay.tyagi@gmail.com\"",
-          "git config user.name",
-          "git config user.email"
+    },
+    {
+        id: "kafka",
+        title: "Kafka",
+        summary: "Messaging utilities",
+        tasks: [
+            {
+                title: "Produce a sample event",
+                description: "Validate a topic end-to-end with a known payload.",
+                steps: [
+                    'echo \'{"event":"ping","source":"dev"}\' | kafka-console-producer --bootstrap-server localhost:9092 --topic dev.events'
+                ]
+            },
+            {
+                title: "Consume the latest messages",
+                description: "Tail a topic to observe recent traffic.",
+                steps: [
+                    "kafka-console-consumer --bootstrap-server localhost:9092 --topic dev.events --from-beginning --max-messages 20"
+                ]
+            },
+            {
+                title: "Reset a consumer group to the latest offset",
+                description: "Recover a stalled consumer without replaying the backlog.",
+                steps: [
+                    "kafka-consumer-groups --bootstrap-server localhost:9092 --group app-dev --topic dev.events --reset-offsets --to-latest --execute"
+                ]
+            }
         ]
-      },
-      {
-        title: "To remove all untracked files and directories",
-        description: "first inspect and then delete",
-        steps: [
-          "git clean -nfd",
-          "git clean -fd"
+    },
+    {
+        id: "shortcuts",
+        title: "Shortcuts",
+        summary: "Macbook shortcuts",
+        tasks: [
+            {
+                title: "IntelliJ Shortcuts",
+                description: "IntelliJ Ultimate IDE shortcuts for MacOS",
+                steps: [
+                    "cmd + shift + T   (for creating a test class of the current class)"
+                ]
+            }
         ]
-      },
-      {
-        title: "Cherry pick commit",
-        description: "Cherry pick commit on any target branch",
-        steps: [
-          "git checkout target/branch",
-          "git cherry-pick commit-hash",
-          "after resolving comments",
-          "git add .",
-          "git cherry-pick --continue",
-          "keep the same commit message using :wq"
-        ]
-      },
-      {
-        title: "Tag creation",
-        description: "Create a tag and push to remote / origin, we switch a branch but checkout a tag",
-        steps: [
-          "git switch branch/from-which-tag-should-be-created",
-          "git tag v3.3.5-beta-lms.2",
-          "git push origin v3.3.5-beta-lms.2",
-          "git checkout v3.3.5-beta-lms.2"
-        ]
-      },
-      {
-        title: "To check which branch the tag is made",
-        description: "check which all possible branches the particular tag is made",
-        steps: [
-          "git fetch --all --tags",
-          "git branch -r --contains v4.1.3-alpha-lms.3"
-        ]
-      },
-      {
-        title: "To reset local branch with remote",
-        description: "this will hard reset all the commits to match the origin/branch",
-        steps: [
-          "git reset --hard origin/branch-name-in-local"
-        ]
-      },
-      {
-        title: "Restore staged changes",
-        description: "restore all the staged changes files to unstage",
-        steps: [
-          "git restore ."
-        ]
-      }
-    ]
-  },
-  {
-    id: "sql",
-    title: "SQL",
-    summary: "Database checks and migrations",
-    tasks: [
-      {
-        title: "Verify connectivity with a health query",
-        description: "Confirm credentials and latency without modifying data.",
-        steps: [
-          'export PGPASSWORD="$DB_PASSWORD"',
-          'psql "host=$DB_HOST user=$DB_USER dbname=$DB_NAME sslmode=require" -c "SELECT now() AS server_time, current_user, version();"'
-        ]
-      },
-      {
-        title: "Export recent orders to CSV",
-        description: "Capture a time-bounded dataset for analysis.",
-        steps: [
-          'psql "host=$DB_HOST user=$DB_USER dbname=$DB_NAME sslmode=require" -c "\\copy (SELECT * FROM orders WHERE created_at >= now() - interval \'7 days\') TO ./orders.csv CSV HEADER"'
-        ]
-      }
-    ]
-  },
-  {
-    id: "docker",
-    title: "Docker",
-    summary: "Local container workflows",
-    tasks: [
-      {
-        title: "Docker containers up and down command",
-        description: "docker containers mentioned in docker-compose.yaml file",
-        steps: [
-          "cd dir/to/docker-compose",
-          "docker compose up -d",
-          "docker compose down"
-        ]
-      },
-      {
-        title: "Docker container maneuver",
-        description: "commands to exec particular container shell bash or view logs and even stop the container",
-        steps: [
-          "docker ps",
-          "docker exec -it 42b3122ce10a sh",
-          "docker exec -it 42b3122ce10a bash",
-          "docker logs -f 42b3122ce10a",
-          "docker stop 42b3122ce10a"
-        ]
-      },
-      {
-        title: "Build and run the app locally",
-        description: "Iterate on the service with local ports and environment variables.",
-        steps: [
-          "docker build -t app:dev .",
-          "docker run --rm -p 3000:3000 --env-file .env app:dev"
-        ]
-      },
-      {
-        title: "Clean up stopped containers and dangling images",
-        description: "Reclaim disk space after local testing.",
-        steps: [
-          "docker container prune -f",
-          "docker image prune -f"
-        ]
-      }
-    ]
-  },
-  {
-    id: "kafka",
-    title: "Kafka",
-    summary: "Messaging utilities",
-    tasks: [
-      {
-        title: "Produce a sample event",
-        description: "Validate a topic end-to-end with a known payload.",
-        steps: [
-          'echo \'{"event":"ping","source":"dev"}\' | kafka-console-producer --bootstrap-server localhost:9092 --topic dev.events'
-        ]
-      },
-      {
-        title: "Consume the latest messages",
-        description: "Tail a topic to observe recent traffic.",
-        steps: [
-          "kafka-console-consumer --bootstrap-server localhost:9092 --topic dev.events --from-beginning --max-messages 20"
-        ]
-      },
-      {
-        title: "Reset a consumer group to the latest offset",
-        description: "Recover a stalled consumer without replaying the backlog.",
-        steps: [
-          "kafka-consumer-groups --bootstrap-server localhost:9092 --group app-dev --topic dev.events --reset-offsets --to-latest --execute"
-        ]
-      }
-    ]
-  }
+    }
 ];
 
 const container = document.getElementById("tech-sections");
@@ -201,139 +215,139 @@ const copyFeedbackDuration = 1400;
 let activeSectionId = runbook[0]?.id || "";
 
 const buildSection = (section) => {
-  const wrapper = document.createElement("article");
-  wrapper.className = "tech-section";
-  wrapper.id = section.id;
+    const wrapper = document.createElement("article");
+    wrapper.className = "tech-section";
+    wrapper.id = section.id;
 
-  const header = document.createElement("div");
-  header.className = "tech-header";
-  header.innerHTML = `<h2>${section.title}</h2><span class="tech-summary">${section.summary}</span>`;
+    const header = document.createElement("div");
+    header.className = "tech-header";
+    header.innerHTML = `<h2>${section.title}</h2><span class="tech-summary">${section.summary}</span>`;
 
-  wrapper.appendChild(header);
-  section.tasks.forEach((task) => wrapper.appendChild(buildTask(task)));
-  return wrapper;
+    wrapper.appendChild(header);
+    section.tasks.forEach((task) => wrapper.appendChild(buildTask(task)));
+    return wrapper;
 };
 
 const buildTask = (task) => {
-  const card = document.createElement("article");
-  card.className = "task-card";
+    const card = document.createElement("article");
+    card.className = "task-card";
 
-  const title = document.createElement("h3");
-  title.className = "task-title";
-  title.textContent = task.title;
+    const title = document.createElement("h3");
+    title.className = "task-title";
+    title.textContent = task.title;
 
-  const description = document.createElement("p");
-  description.className = "task-description";
-  description.textContent = task.description;
+    const description = document.createElement("p");
+    description.className = "task-description";
+    description.textContent = task.description;
 
-  const stepsList = document.createElement("ol");
-  stepsList.className = "step-list";
+    const stepsList = document.createElement("ol");
+    stepsList.className = "step-list";
 
-  task.steps.forEach((stepText) => {
-    const step = document.createElement("li");
-    step.className = "step";
+    task.steps.forEach((stepText) => {
+        const step = document.createElement("li");
+        step.className = "step";
 
-    const stepBody = document.createElement("div");
-    stepBody.className = "step-body";
+        const stepBody = document.createElement("div");
+        stepBody.className = "step-body";
 
-    const pre = document.createElement("pre");
-    pre.className = "copyable";
-    pre.setAttribute("tabindex", "0");
-    const code = document.createElement("code");
-    code.textContent = stepText;
-    pre.appendChild(code);
+        const pre = document.createElement("pre");
+        pre.className = "copyable";
+        pre.setAttribute("tabindex", "0");
+        const code = document.createElement("code");
+        code.textContent = stepText;
+        pre.appendChild(code);
 
-    const triggerCopy = () => handleCopy(stepText, pre);
-    pre.addEventListener("click", triggerCopy);
-    pre.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        triggerCopy();
-      }
+        const triggerCopy = () => handleCopy(stepText, pre);
+        pre.addEventListener("click", triggerCopy);
+        pre.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                triggerCopy();
+            }
+        });
+
+        stepBody.append(pre);
+        step.append(stepBody);
+        stepsList.appendChild(step);
     });
 
-    stepBody.append(pre);
-    step.append(stepBody);
-    stepsList.appendChild(step);
-  });
-
-  card.append(title, description, stepsList);
-  return card;
+    card.append(title, description, stepsList);
+    return card;
 };
 
 const handleCopy = async (text, target) => {
-  try {
-    if (navigator?.clipboard?.writeText) {
-      await navigator.clipboard.writeText(text);
-    } else {
-      legacyCopy(text);
+    try {
+        if (navigator?.clipboard?.writeText) {
+            await navigator.clipboard.writeText(text);
+        } else {
+            legacyCopy(text);
+        }
+        markCopied(target);
+    } catch (err) {
+        console.error("Copy failed", err);
     }
-    markCopied(target);
-  } catch (err) {
-    console.error("Copy failed", err);
-  }
 };
 
 const legacyCopy = (text) => {
-  const textarea = document.createElement("textarea");
-  textarea.value = text;
-  textarea.setAttribute("readonly", "");
-  textarea.style.position = "absolute";
-  textarea.style.left = "-9999px";
-  document.body.appendChild(textarea);
-  textarea.select();
-  document.execCommand("copy");
-  textarea.remove();
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "absolute";
+    textarea.style.left = "-9999px";
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    textarea.remove();
 };
 
 const markCopied = (element) => {
-  if (element._copyTimeout) {
-    clearTimeout(element._copyTimeout);
-  }
+    if (element._copyTimeout) {
+        clearTimeout(element._copyTimeout);
+    }
 
-  element.classList.add("copied");
+    element.classList.add("copied");
 
-  element._copyTimeout = setTimeout(() => {
-    element.classList.remove("copied");
-    element._copyTimeout = null;
-  }, copyFeedbackDuration);
+    element._copyTimeout = setTimeout(() => {
+        element.classList.remove("copied");
+        element._copyTimeout = null;
+    }, copyFeedbackDuration);
 };
 
 const renderTabs = () => {
-  navContainer.innerHTML = "";
-  runbook.forEach((section) => {
-    const button = document.createElement("button");
-    button.className = "section-tab";
-    button.type = "button";
-    button.textContent = section.title;
-    button.dataset.sectionId = section.id;
-    if (section.id === activeSectionId) {
-      button.classList.add("active");
-    }
-    button.addEventListener("click", () => {
-      if (activeSectionId !== section.id) {
-        activeSectionId = section.id;
-        renderSection();
-        renderTabs();
-      }
+    navContainer.innerHTML = "";
+    runbook.forEach((section) => {
+        const button = document.createElement("button");
+        button.className = "section-tab";
+        button.type = "button";
+        button.textContent = section.title;
+        button.dataset.sectionId = section.id;
+        if (section.id === activeSectionId) {
+            button.classList.add("active");
+        }
+        button.addEventListener("click", () => {
+            if (activeSectionId !== section.id) {
+                activeSectionId = section.id;
+                renderSection();
+                renderTabs();
+            }
+        });
+        navContainer.appendChild(button);
     });
-    navContainer.appendChild(button);
-  });
 };
 
 const renderSection = () => {
-  container.innerHTML = "";
-  const current = runbook.find((section) => section.id === activeSectionId) || runbook[0];
-  if (!current) {
-    container.textContent = "No sections configured.";
-    return;
-  }
-  container.appendChild(buildSection(current));
+    container.innerHTML = "";
+    const current = runbook.find((section) => section.id === activeSectionId) || runbook[0];
+    if (!current) {
+        container.textContent = "No sections configured.";
+        return;
+    }
+    container.appendChild(buildSection(current));
 };
 
 const render = () => {
-  renderTabs();
-  renderSection();
+    renderTabs();
+    renderSection();
 };
 
 document.addEventListener("DOMContentLoaded", render);
