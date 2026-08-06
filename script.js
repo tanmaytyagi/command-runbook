@@ -11,8 +11,10 @@ const runbook = [
                 steps: [
                     "git checkout main",
                     "git pull origin main",
-                    "git checkout -b feature/short-description",
-                    "git push -u origin feature/short-description"
+                    "git checkout -b feature/space-133844/added-auth-check",
+                    "git push -u origin feature/space-133844/added-auth-check",
+                    "git commit -am \"SPACE-133844 added auth check\"",
+                    "git push"
                 ]
             },
             {
